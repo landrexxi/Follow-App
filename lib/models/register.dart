@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-Register registerFromJson(String str) => Register.fromJson(json.decode(str));
+SingUp registerFromJson(String str) => SingUp.fromJson(json.decode(str));
 
-String registerToJson(Register data) => json.encode(data.toJson());
+String registerToJson(SingUp data) => json.encode(data.toJson());
 
-class Register {
-  Register({
+class SingUp {
+  SingUp({
     required this.username,
   });
 
   String username;
 
-  factory Register.fromJson(Map<String, dynamic> json) => Register(
+  factory SingUp.fromJson(Map<String, dynamic> json) => SingUp(
         username: json["username"],
       );
 

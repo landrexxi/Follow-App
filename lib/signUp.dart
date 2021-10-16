@@ -1,40 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:follow_app/login_newpass.dart';
+import 'package:follow_app/admin/landingpage_admin.dart';
+import 'package:follow_app/councilor/landingpage_councilor.dart';
+import 'package:follow_app/login.dart';
+import 'package:follow_app/models/actor.dart';
 import 'package:follow_app/models/output.dart';
-import 'package:follow_app/signup_IDEmail.dart';
+import 'package:follow_app/models/register.dart';
 import 'package:follow_app/services/api_manager.dart';
-// ignore: import_of_legacy_library_into_null_safe
+import 'package:follow_app/signup_IDEmail.dart';
+import 'package:follow_app/student/landingpage_student.dart';
+import 'package:follow_app/teacher/landingpage_teacher.dart';
+import 'package:follow_app/main.dart';
+import 'package:follow_app/teacher/profile.dart';
+import 'package:follow_app/teacher/navbar_teacher.dart';
 
-class emailCode extends StatefulWidget {
+import 'verification.dart';
+
+// INPUT ID NUMBER NEW AND CONFIRM PASS
+class SignUp extends StatefulWidget {
+  SignUp(
+    this.id,
+    this.email,
+    this.code,
+  );
   final String id;
   final String email;
-  emailCode(this.id, this.email);
+  final String code;
 
   @override
-  _emailCodeState createState() => _emailCodeState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _emailCodeState extends State<emailCode> {
-  TextEditingController codeEditingController = new TextEditingController();
-  late Future<Output> _outputverification;
+class _SignUpState extends State<SignUp> {
+  TextEditingController idEditingController = new TextEditingController();
+  TextEditingController newPassEditingController = new TextEditingController();
+  TextEditingController confirmPassEditingController =
+      new TextEditingController();
+  late Future<Output> _output;
+  late Future<SingUp> _register;
+  late Future<Actor> _login;
+  bool _obscureText = true;
+  bool _obscureText2 = true;
+  // bool isHiddenPassword = true;
   @override
   void initState() {
-    _outputverification = API_Manager().getOutput(widget.id, widget.email);
-    super.initState();
+    _output = API_Manager().getVerification(
+      widget.id,
+      widget.code,
+    );
   }
 
   Widget build(BuildContext context) {
-    // String idstore = "";
-    // String emailstore = "";
-    // idstore = widget.id;
-    // emailstore = widget.email;
-
-    Color myColor;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
           child: FutureBuilder<Output>(
-            future: _outputverification,
+            future: _output,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data!.result == true) {
@@ -46,15 +66,43 @@ class _emailCodeState extends State<emailCode> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
+                          // 659EC7
                           Color(0xFF98b4ac),
                           Color(0xFF98b4ac),
                           Color(0xFF98b4ac),
+
+                          // Color(0xFF8A2387),
+                          // Color(0xffE94057),
+                          // Color(0xFFF27121),
                         ])),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 80,
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.black,
+                                  size: 27,
+                                ),
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Login()),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
                         ),
                         ClipRRect(
                           child: Image(
@@ -72,11 +120,11 @@ class _emailCodeState extends State<emailCode> {
                           ),
                         ),
                         SizedBox(
-                          height: 35,
+                          height: 30,
                         ),
                         Expanded(
                           child: Container(
-                            height: 450,
+                            height: 500,
                             width: 325,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -86,13 +134,17 @@ class _emailCodeState extends State<emailCode> {
                                       Color(0xFFd8c090),
                                       Color(0xFFd8c090), // nude
                                       Color(0xFFd8c090),
+
+                                      // Color(0xFF1569C7),
+                                      // Color(0xFFE94057),
+                                      // Color(0xFFF27121),
                                     ]),
                                 borderRadius: BorderRadius.circular(10)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                  height: 35,
+                                  height: 25,
                                 ),
                                 Text(
                                   'Hello',
@@ -105,20 +157,22 @@ class _emailCodeState extends State<emailCode> {
                                   height: 10,
                                 ),
                                 Text(
-                                  'Kindly input your code here send via Gmail',
+                                  'Sign Up your Account and Input your Password',
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      color: Color(0xFF48444c),
-                                      fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color(0xFF48444c),
+                                  ),
                                 ),
                                 SizedBox(height: 20),
                                 Container(
                                   width: 250,
                                   child: TextField(
-                                    controller: codeEditingController,
+                                    controller: idEditingController,
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(),
-                                        labelText: 'Enter Code',
+                                        labelText: 'ID Number',
                                         fillColor: Color(0xFF48444c),
                                         suffixIcon: Icon(
                                           Icons.confirmation_number,
@@ -127,19 +181,148 @@ class _emailCodeState extends State<emailCode> {
                                   ),
                                 ),
                                 SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  width: 250,
+                                  child: TextFormField(
+                                    controller: newPassEditingController,
+                                    obscureText: _obscureText,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'New Password',
+                                        fillColor: Color(0xFF48444c),
+                                        // LIHOKA NI LAAAAAAAAAAAATER
+                                        suffixIcon: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _obscureText = !_obscureText;
+                                            });
+                                          },
+                                          child: Icon(_obscureText
+                                              ? Icons.visibility
+                                              : Icons.visibility_off),
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  width: 250,
+                                  child: TextFormField(
+                                    controller: confirmPassEditingController,
+                                    obscureText: _obscureText2,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Confirm Password',
+                                        fillColor: Color(0xFF48444c),
+                                        suffixIcon: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _obscureText2 = !_obscureText2;
+                                            });
+                                          },
+                                          child: Icon(_obscureText2
+                                              ? Icons.visibility
+                                              : Icons.visibility_off),
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
                                   height: 20,
                                 ),
                                 GestureDetector(
-                                    onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginNewPass(
-                                                      widget.id,
-                                                      widget.email,
-                                                      codeEditingController
-                                                          .text)),
-                                        ),
+                                    onTap: () {
+                                      if (widget.id ==
+                                          idEditingController.text) {
+                                        if (newPassEditingController.text ==
+                                            confirmPassEditingController.text) {
+                                          setState(() {
+                                            _register = API_Manager()
+                                                .postSignUp(
+                                                    idEditingController.text,
+                                                    confirmPassEditingController
+                                                        .text);
+                                          });
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Login()));
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (ctx) => AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0))),
+                                              backgroundColor:
+                                                  Color(0xFF98b4ac),
+                                              title: Text(
+                                                "Password Not Match",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                ),
+                                                textAlign: TextAlign.justify,
+                                              ),
+                                              actions: <Widget>[
+                                                ElevatedButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: Text(
+                                                    'Try Again',
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(Color(
+                                                                  0xFFd8c090))),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            backgroundColor: Color(0xFF98b4ac),
+                                            title: Text(
+                                              "ID Number does not Exist",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                              textAlign: TextAlign.justify,
+                                            ),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  'Try Again',
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Color(
+                                                                0xFFd8c090))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    },
                                     child: Container(
                                       alignment: Alignment.center,
                                       width: 250,
@@ -153,14 +336,13 @@ class _emailCodeState extends State<emailCode> {
                                                 Color(0xFF98b4ac),
                                                 Color(0xFF98b4ac), // nude
                                                 Color(0xFF98b4ac),
-
                                                 // Color(0xFF1569C7),
                                                 // Color(0xFFE94057),
                                                 // Color(0xFFF27121),
                                               ])),
                                       child: Padding(
                                         padding: EdgeInsets.all(12.0),
-                                        child: Text('Submit',
+                                        child: Text('Register Account',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20,
@@ -169,8 +351,34 @@ class _emailCodeState extends State<emailCode> {
                                       ),
                                     )),
                                 SizedBox(
-                                  height: 15,
+                                  height: 12,
                                 ),
+                                GestureDetector(
+                                    onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Login()),
+                                        ),
+                                    child: RichText(
+                                      text: new TextSpan(
+                                        // Note: Styles for TextSpans must be explicitly defined.
+                                        // Child text spans will inherit styles from parent
+                                        style: new TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.black,
+                                        ),
+                                        children: <TextSpan>[
+                                          new TextSpan(
+                                              text: 'Already have an account? ',
+                                              style: TextStyle(fontSize: 16)),
+                                          new TextSpan(
+                                              text: 'Login',
+                                              style: new TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16)),
+                                        ],
+                                      ),
+                                    )),
                               ],
                             ),
                           ),
@@ -225,7 +433,7 @@ class _emailCodeState extends State<emailCode> {
                         ),
                         Expanded(
                           child: Container(
-                            height: 100,
+                            height: 450,
                             width: 325,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -247,16 +455,23 @@ class _emailCodeState extends State<emailCode> {
                                 SizedBox(
                                   height: 35,
                                 ),
-                                SizedBox(
-                                  height: 30,
-                                ),
                                 Text(
-                                  'ID Number and Email does not exist dzahh',
+                                  'Invalid Verification',
                                   style: TextStyle(
-                                      fontSize: 17,
                                       color: Color(0xFF48444c),
+                                      fontSize: 25,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                // Text(
+                                //   'Invalid Verification',
+                                //   style: TextStyle(
+                                //       fontSize: 20,
+                                //       color: Color(0xFF48444c),
+                                //       fontWeight: FontWeight.bold),
+                                // ),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -264,12 +479,13 @@ class _emailCodeState extends State<emailCode> {
                                     onTap: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => emailCode(
-                                                  widget.id, widget.email)),
+                                              builder: (context) =>
+                                                  Verification(
+                                                      widget.id, widget.email)),
                                         ),
                                     child: Container(
                                       alignment: Alignment.center,
-                                      width: 250,
+                                      width: 200,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(50),
@@ -287,13 +503,12 @@ class _emailCodeState extends State<emailCode> {
                                               ])),
                                       child: Padding(
                                         padding: EdgeInsets.all(12.0),
-                                        child:
-                                            Text('Please input valid details',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                )),
+                                        child: Text('Input Valid Code',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            )),
                                       ),
                                     )),
                                 SizedBox(
@@ -310,7 +525,8 @@ class _emailCodeState extends State<emailCode> {
                     ),
                   );
                 }
-              } else
+              } else {
+                print(snapshot.data);
                 return Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -410,10 +626,21 @@ class _emailCodeState extends State<emailCode> {
                     ],
                   ),
                 );
+              }
             },
           ),
         ),
       ),
     );
   }
+
+  // void _togglePasswordView() {
+  //   var isHiddenPassword;
+  //   if (isHiddenPassword == true) {
+  //     isHiddenPassword == false;
+  //   } else {
+  //     isHiddenPassword = true;
+  //   }
+  //   setState(() {});
+  // }
 }

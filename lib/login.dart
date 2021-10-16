@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:follow_app/login_newpass.dart';
+import 'package:follow_app/mock_login.dart';
+import 'package:follow_app/models/actor.dart';
+import 'package:follow_app/register.dart';
+import 'package:follow_app/signUp.dart';
 import 'package:follow_app/models/output.dart';
 import 'package:follow_app/signup_IDEmail.dart';
 import 'package:follow_app/services/api_manager.dart';
+import 'package:follow_app/student/landingpage_student.dart';
 import 'package:follow_app/teacher/landingpage_teacher.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
@@ -12,12 +16,37 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController emailEditingController = new TextEditingController();
+  TextEditingController idNumberEditingController = new TextEditingController();
   TextEditingController passwordEditingController = new TextEditingController();
-  late Future<Output> _output;
+  late Future<Actor> _login;
+
+  bool _obscureText = true;
   @override
+  void initState() {}
   Widget build(BuildContext context) {
     Color myColor;
+
+    getActor() {
+      FutureBuilder<Actor>(
+          future: _login,
+          builder: (context, snapshot) {
+            print("sulooodd");
+            if (snapshot.hasData) {
+              print("actor " + snapshot.data!.actor.toString());
+              if (snapshot.data!.actor == "teacher") {
+                print("teaaaaaacc");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LandingPageTeach()),
+                );
+              } else if (snapshot.data!.actor == "learner")
+                return LandingPageStud();
+              else if (snapshot.data!.actor == "no account") return Login();
+            }
+            return Login();
+          });
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -106,6 +135,7 @@ class _LoginState extends State<Login> {
                       Container(
                         width: 250,
                         child: TextField(
+                          controller: idNumberEditingController,
                           keyboardType: TextInputType.number,
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
@@ -130,14 +160,21 @@ class _LoginState extends State<Login> {
                       Container(
                         width: 250,
                         child: TextField(
-                          obscureText: true,
+                          controller: passwordEditingController,
+                          obscureText: _obscureText,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Enter Password',
                               fillColor: Color(0xFF48444c),
-                              suffixIcon: Icon(
-                                Icons.remove_red_eye,
-                                size: 17,
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                                child: Icon(_obscureText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
                               )),
                         ),
                       ),
@@ -145,11 +182,58 @@ class _LoginState extends State<Login> {
                         height: 20,
                       ),
                       GestureDetector(
-                          onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LandingPageTeach()),
-                              ),
+                          onTap: () {
+                            print("a");
+                            API_Manager()
+                                .getLogin(idNumberEditingController.text,
+                                    passwordEditingController.text)
+                                .then((response) {
+                              print(response.actor.toString());
+                              if (response.actor == "teacher") {
+                                print("teaaaaaacc");
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LandingPageTeach()),
+                                );
+                              } else if (response.actor == "learner")
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LandingPageStud()),
+                                );
+                              else if (response.actor == "no account") {
+                                print("baaaaa");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Login()),
+                                );
+                              } else {
+                                print("baatttaaa");
+                              }
+                            });
+
+                            // print("1");
+                            // setState(() {
+                            //   print("bang");
+                            //   _login = API_Manager().getLogin(
+                            //       idNumberEditingController.text,
+                            //       passwordEditingController.text);
+                            //   print("kkkkk");
+                            //   print(_login.toString());
+                            // });
+
+                            // var act = await getActor();
+                            // print("acttt " + act.toString());
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => act()),
+                            // );
+                            // print("2");
+
+                            // print("3");
+                          },
                           child: Container(
                             alignment: Alignment.center,
                             width: 250,

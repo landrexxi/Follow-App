@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:follow_app/login_newpass.dart';
+import 'package:follow_app/signUp.dart';
 
 class Referral extends StatefulWidget {
   @override

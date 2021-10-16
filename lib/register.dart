@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:follow_app/login.dart';
 import 'package:follow_app/verification.dart';
 import 'package:follow_app/signUp.dart';
 import 'package:follow_app/services/api_manager.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
-class signupIDEmail extends StatefulWidget {
+// INPUT ID NUMBER HERE AND EMAIL
+class registerMain extends StatefulWidget {
   @override
-  _signupIDEmailState createState() => _signupIDEmailState();
+  _registerMainState createState() => _registerMainState();
 }
 
-class _signupIDEmailState extends State<signupIDEmail> {
+class _registerMainState extends State<registerMain> {
   TextEditingController idEditingController = new TextEditingController();
-  TextEditingController emailEditingController = new TextEditingController();
+  TextEditingController passEditingController = new TextEditingController();
+
+  final FocusNode idEditingFocus = FocusNode();
+  final FocusNode passEditingFocus = FocusNode();
+  // TODO: initState
+
+  @override
+  void dispose() {
+    idEditingController.clear();
+    passEditingController.clear();
+    super.dispose();
+  }
 
   Widget build(BuildContext context) {
     Color myColor;
@@ -39,29 +50,7 @@ class _signupIDEmailState extends State<signupIDEmail> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 8,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                        size: 27,
-                      ),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
+                height: 80,
               ),
               ClipRRect(
                 child: Image(
@@ -103,7 +92,7 @@ class _signupIDEmailState extends State<signupIDEmail> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        height: 45,
+                        height: 30,
                       ),
                       Text(
                         'Hello',
@@ -116,7 +105,7 @@ class _signupIDEmailState extends State<signupIDEmail> {
                         height: 10,
                       ),
                       Text(
-                        'Input your credentials here',
+                        'Input ID Number and Password here',
                         style: TextStyle(
                             fontSize: 15,
                             color: Color(0xFF48444c),
@@ -144,10 +133,10 @@ class _signupIDEmailState extends State<signupIDEmail> {
                       Container(
                         width: 250,
                         child: TextField(
-                          controller: emailEditingController,
+                          controller: passEditingController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: 'Enter Email',
+                              labelText: 'Enter Password',
                               fillColor: Color(0xFF48444c),
                               suffixIcon: Icon(
                                 Icons.mail,
@@ -164,7 +153,7 @@ class _signupIDEmailState extends State<signupIDEmail> {
                                 MaterialPageRoute(
                                     builder: (context) => Verification(
                                         idEditingController.text,
-                                        emailEditingController.text)),
+                                        passEditingController.text)),
                               ),
                           child: Container(
                             alignment: Alignment.center,

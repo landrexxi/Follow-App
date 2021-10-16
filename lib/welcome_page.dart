@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:follow_app/login.dart';
-import 'package:follow_app/login_newpass.dart';
+import 'package:follow_app/signUp.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
 class WelcomePage extends StatefulWidget {
