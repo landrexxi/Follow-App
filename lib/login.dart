@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:follow_app/director/landingpage_director.dart';
 import 'package:follow_app/mock_login.dart';
 import 'package:follow_app/models/actor.dart';
 import 'package:follow_app/register.dart';
@@ -8,6 +9,7 @@ import 'package:follow_app/signup_IDEmail.dart';
 import 'package:follow_app/services/api_manager.dart';
 import 'package:follow_app/student/landingpage_student.dart';
 import 'package:follow_app/teacher/landingpage_teacher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
 class Login extends StatefulWidget {
@@ -21,6 +23,7 @@ class _LoginState extends State<Login> {
   late Future<Actor> _login;
 
   bool _obscureText = true;
+  DateTime timeBackPressed = DateTime.now();
   @override
   void initState() {}
   Widget build(BuildContext context) {
@@ -125,7 +128,7 @@ class _LoginState extends State<Login> {
                         height: 10,
                       ),
                       Text(
-                        'Please Log in to Your Account ',
+                        'Please Log in to Your Account',
                         style: TextStyle(
                             fontSize: 15,
                             color: Color(0xFF48444c),
@@ -181,85 +184,104 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 20,
                       ),
-                      GestureDetector(
-                          onTap: () {
-                            print("a");
-                            API_Manager()
-                                .getLogin(idNumberEditingController.text,
-                                    passwordEditingController.text)
-                                .then((response) {
-                              print(response.actor.toString());
-                              if (response.actor == "teacher") {
-                                print("teaaaaaacc");
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LandingPageTeach()),
-                                );
-                              } else if (response.actor == "learner")
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LandingPageStud()),
-                                );
-                              else if (response.actor == "no account") {
-                                print("baaaaa");
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Login()),
-                                );
-                              } else {
-                                print("baatttaaa");
-                              }
-                            });
-
-                            // print("1");
-                            // setState(() {
-                            //   print("bang");
-                            //   _login = API_Manager().getLogin(
-                            //       idNumberEditingController.text,
-                            //       passwordEditingController.text);
-                            //   print("kkkkk");
-                            //   print(_login.toString());
-                            // });
-
-                            // var act = await getActor();
-                            // print("acttt " + act.toString());
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => act()),
-                            // );
-                            // print("2");
-
-                            // print("3");
-                          },
+                      Material(
+                          color: Colors.transparent,
                           child: Container(
-                            alignment: Alignment.center,
-                            width: 250,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [
-                                      Color(0xFF98b4ac),
-                                      Color(0xFF98b4ac), // nude
-                                      Color(0xFF98b4ac),
+                            width: 170,
+                            height: 50,
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                color: Color(0xFF98b4ac),
+                                child: InkWell(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(7.0),
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    print("a");
 
-                                      // Color(0xFF1569C7),
-                                      // Color(0xFFE94057),
-                                      // Color(0xFFF27121),
-                                    ])),
-                            child: Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Text('Log In',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ),
+                                    API_Manager()
+                                        .getLogin(
+                                            idNumberEditingController.text,
+                                            passwordEditingController.text)
+                                        .then((response) {
+                                      if (response.actor == "teacher") {
+                                        Center(
+                                            child: CircularProgressIndicator());
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LandingPageStud()),
+                                        );
+                                        // Navigator.pushAndRemoveUntil(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (BuildContext context) =>
+                                        //         LandingPageTeach(),
+                                        //   ),
+                                        //   (route) => false,
+                                        // );
+                                      } else if (response.actor == "learner") {
+                                        Center(
+                                            child: CircularProgressIndicator());
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LPageDirect()),
+                                        );
+                                      } else if (response.actor ==
+                                          "no account") {
+                                        Container(
+                                            child: CircularProgressIndicator());
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            backgroundColor: Color(0xFF98b4ac),
+                                            title: Text(
+                                              "Invalid Credentials",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                              textAlign: TextAlign.justify,
+                                            ),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  'Try Again',
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Color(
+                                                                0xFFd8c090))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                  splashColor: Colors.brown[300],
+                                )),
                           )),
                       SizedBox(
                         height: 15,

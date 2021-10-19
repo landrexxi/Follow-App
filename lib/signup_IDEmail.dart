@@ -3,17 +3,32 @@ import 'package:follow_app/login.dart';
 import 'package:follow_app/verification.dart';
 import 'package:follow_app/signUp.dart';
 import 'package:follow_app/services/api_manager.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 
-class signupIDEmail extends StatefulWidget {
+class signupIDEmail extends StatefulWidget with InputValidationMixin {
   @override
   _signupIDEmailState createState() => _signupIDEmailState();
+}
+
+final formGlobalKey = GlobalKey<FormState>();
+mixin InputValidationMixin {
+  // bool isEmailValid(String email) {
+  //   Pattern pattern =
+  //     r '^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  //   RegExp regex = new RegExp(pattern);
+  //   return regex.hasMatch(email);
+  // }
 }
 
 class _signupIDEmailState extends State<signupIDEmail> {
   TextEditingController idEditingController = new TextEditingController();
   TextEditingController emailEditingController = new TextEditingController();
 
+  // String? _email;
+
+  @override
   Widget build(BuildContext context) {
     Color myColor;
     return Scaffold(
@@ -52,7 +67,7 @@ class _signupIDEmailState extends State<signupIDEmail> {
                         color: Colors.black,
                         size: 27,
                       ),
-                      onPressed: () => Navigator.push(
+                      onPressed: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => Login()),
                       ),
@@ -141,57 +156,118 @@ class _signupIDEmailState extends State<signupIDEmail> {
                       SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        width: 250,
-                        child: TextField(
-                          controller: emailEditingController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Enter Email',
-                              fillColor: Color(0xFF48444c),
-                              suffixIcon: Icon(
-                                Icons.mail,
-                                size: 17,
-                              )),
+                      Form(
+                        key: formGlobalKey,
+                        child: Container(
+                          width: 250,
+                          child: TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            controller: emailEditingController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Enter Email',
+                                fillColor: Color(0xFF48444c),
+                                suffixIcon: Icon(
+                                  Icons.mail,
+                                  size: 17,
+                                )),
+                            validator: (email) {
+                              if (isEmailValid(email))
+                                return null;
+                              else
+                                return 'Enter a valid email address';
+                            },
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      GestureDetector(
-                          onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Verification(
-                                        idEditingController.text,
-                                        emailEditingController.text)),
-                              ),
+                      Material(
+                          color: Colors.transparent,
                           child: Container(
-                            alignment: Alignment.center,
-                            width: 250,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [
-                                      Color(0xFF98b4ac),
-                                      Color(0xFF98b4ac), // nude
-                                      Color(0xFF98b4ac),
-
-                                      // Color(0xFF1569C7),
-                                      // Color(0xFFE94057),
-                                      // Color(0xFFF27121),
-                                    ])),
-                            child: Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Text('Submit',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ),
+                            width: 180,
+                            height: 50,
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                color: Color(0xFF98b4ac),
+                                child: InkWell(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      'Submit',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    if (formGlobalKey.currentState!
+                                        .validate()) {
+                                      formGlobalKey.currentState!.save();
+                                      // use the email provided here
+                                    }
+                                    API_Manager()
+                                        .getRegister(idEditingController.text,
+                                            emailEditingController.text)
+                                        .then((response) {
+                                      if (response.result == true) {
+                                        Center(
+                                            child: CircularProgressIndicator());
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Verification(
+                                                      idEditingController.text,
+                                                      emailEditingController
+                                                          .text)),
+                                        );
+                                      } else if (response.result == false) {
+                                        Center(
+                                            child: CircularProgressIndicator());
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            backgroundColor: Color(0xFF98b4ac),
+                                            title: Text(
+                                              "ID Number does not exist",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                              textAlign: TextAlign.justify,
+                                            ),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  'Try Again',
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Color(
+                                                                0xFFd8c090))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                  splashColor: Colors.brown[300],
+                                )),
                           )),
                       SizedBox(
                         height: 15,
@@ -208,5 +284,12 @@ class _signupIDEmailState extends State<signupIDEmail> {
         ),
       ),
     );
+  }
+
+  bool isEmailValid(String? email) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern.toString());
+    return regex.hasMatch(email.toString());
   }
 }

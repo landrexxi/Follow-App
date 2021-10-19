@@ -75,39 +75,39 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
-              GestureDetector(
-                  onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      ),
+              Material(
+                  color: Colors.transparent,
                   child: Container(
-                    alignment: Alignment.center,
-                    width: 250,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Color(0xFFd8c090),
-                              Color(0xFFd8c090), // nude
-                              Color(0xFFd8c090),
-
-                              // Color(0xFF1569C7),
-                              // Color(0xFFE94057),
-                              // Color(0xFFF27121),
-                            ])),
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text('Click here to start',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
+                    width: 255,
+                    height: 50,
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        color: Color(0xFFd8c090),
+                        child: InkWell(
+                          child: Padding(
+                            padding: EdgeInsets.all(9.5),
+                            child: Text(
+                              'Click here to start',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            );
+                          },
+                          splashColor: Colors.brown[300],
+                        )),
                   )),
               SizedBox(
                 height: 10,

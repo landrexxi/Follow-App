@@ -108,14 +108,14 @@ class _LandingPageStudState extends State<LandingPageStud> {
                     ),
                   ],
                 ),
-                GridView.count(
-                  crossAxisCount: 4,
-                  children: List.generate(40, (index) {
-                    return Card(
-                      child: Image.network("https://robohash.org/$index"),
-                    ); //robohash.org api provide you different images for any number you are giving
-                  }),
-                ),
+                // GridView.count(
+                //   crossAxisCount: 4,
+                //   children: List.generate(40, (index) {
+                //     return Card(
+                //       child: Image.network("https://robohash.org/$index"),
+                //     ); //robohash.org api provide you different images for any number you are giving
+                //   }),
+                // ),
               ],
             )),
       ),

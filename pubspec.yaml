@@ -22,8 +22,12 @@ environment:
 
 dependencies:
   multilevel_drawer: ^2.0.0
+  form_field_validator: ^1.0.1
+  fluttertoast: ^8.0.8
+  email_validator: '^1.0.5'
   flutter:
     sdk: flutter
+  
 
 
   # The following adds the Cupertino Icons font to your application.
