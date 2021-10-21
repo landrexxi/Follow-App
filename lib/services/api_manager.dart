@@ -17,22 +17,45 @@ class API_Manager {
           headers: {
             "Authorization": "Token 9eb5151b6ddfe3f1d5a18af586c689f323feb6a3"
           });
+      print("1.1");
+      print(Uri.parse(
+          Strings.root_url + Strings.register_url + id + "/" + email));
 
       if (response.statusCode == 200) {
+        print("2.2");
+        print(response);
         var jsonString = response.body;
+        print("3.3");
+        print(jsonString);
         var jsonMap = json.decode(jsonString);
+        print("4.4");
+        print(jsonMap);
         outputModel = Output.fromJson(jsonMap);
+        print("5.5");
+        print(outputModel);
       }
       if (response.statusCode == 400) {
+        print("6.6");
+        print(response);
         var jsonString = response.body;
+        print("7.7");
+        print(jsonString);
         var jsonMap = json.decode(jsonString);
+        print("8.8");
+        print(jsonMap);
         outputModel = Output.fromJson(jsonMap);
-        print("asdas");
-        print(outputModel.toString());
+        print("9.9");
+        print(outputModel);
       }
     } catch (Exception) {
+      print("10.10");
+      print(Exception);
+      print("11.11");
+      print(outputModel.toString());
       return outputModel;
     }
+    print("12.12");
+    print(outputModel);
     return outputModel;
   }
 
@@ -140,7 +163,11 @@ class API_Manager {
 
       if (response.statusCode == 400) {
         var jsonString = response.body;
+        print("jsonStringlogin");
+        print(jsonString);
         var jsonMap = json.decode(jsonString);
+        print("maplogin");
+        print(jsonString);
         loginModel = Actor.fromJson(jsonMap);
       }
     } catch (Exception) {

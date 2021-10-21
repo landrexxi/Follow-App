@@ -6,7 +6,7 @@ import 'package:follow_app/models/actor.dart';
 import 'package:follow_app/models/output.dart';
 import 'package:follow_app/models/register.dart';
 import 'package:follow_app/services/api_manager.dart';
-import 'package:follow_app/signup_IDEmail.dart';
+import 'package:follow_app/register.dart';
 import 'package:follow_app/student/landingpage_student.dart';
 import 'package:follow_app/teacher/landingpage_teacher.dart';
 import 'package:follow_app/main.dart';

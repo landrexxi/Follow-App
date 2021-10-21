@@ -25,21 +25,8 @@ class _LandingPageStudState extends State<LandingPageStud> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hi Mother Fucker,',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 45,
-                          fontFamily: 'DancingScript',
-                        ),
-                      ),
-                    ],
-                  ),
+                SizedBox(
+                  height: 8,
                 ),
                 // CAROSEL
                 CarouselSlider(

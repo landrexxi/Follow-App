@@ -9,7 +9,7 @@ class Output {
     required this.result,
   });
 
-  bool result;
+  String result;
 
   factory Output.fromJson(Map<String, dynamic> json) => Output(
         result: json["result"],

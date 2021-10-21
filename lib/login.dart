@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:follow_app/director/landingpage_director.dart';
 import 'package:follow_app/mock_login.dart';
 import 'package:follow_app/models/actor.dart';
-import 'package:follow_app/register.dart';
+import 'package:follow_app/mockReg.dart';
 import 'package:follow_app/signUp.dart';
 import 'package:follow_app/models/output.dart';
-import 'package:follow_app/signup_IDEmail.dart';
+import 'package:follow_app/register.dart';
 import 'package:follow_app/services/api_manager.dart';
 import 'package:follow_app/student/landingpage_student.dart';
 import 'package:follow_app/teacher/landingpage_teacher.dart';
@@ -218,11 +218,13 @@ class _LoginState extends State<Login> {
                                       if (response.actor == "teacher") {
                                         Center(
                                             child: CircularProgressIndicator());
-                                        Navigator.pushReplacement(
+                                        Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LandingPageStud()),
+                                            builder: (BuildContext context) =>
+                                                LandingPageStud(),
+                                          ),
+                                          (route) => false,
                                         );
                                         // Navigator.pushAndRemoveUntil(
                                         //   context,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:follow_app/login.dart';
 import 'package:follow_app/signUp.dart';
 import 'package:follow_app/models/output.dart';
-import 'package:follow_app/signup_IDEmail.dart';
+import 'package:follow_app/register.dart';
 import 'package:follow_app/services/api_manager.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
